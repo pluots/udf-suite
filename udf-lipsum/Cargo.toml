@@ -8,5 +8,5 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
-udf = "0.3.3"
+udf = "0.3.5"
 lipsum = "0.8.2"

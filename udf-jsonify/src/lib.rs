@@ -1,3 +1,11 @@
+//! Adds the `jsonify` function to turn any arguments into a JSON string
+//! 
+//! Add with
+//! 
+//! ```sql
+//! CREATE FUNCTION jsonify RETURNS string SONAME 'libudf_jsonify.so';
+//! ```
+
 use serde_json::{Map, Number, Value};
 use udf::prelude::*;
 use udf::MaxLenOptions;
@@ -15,6 +23,7 @@ impl BasicUdf for Jsonify {
         Ok(Self::default())
     }
 
+    /// All we do here is map our arguments,
     fn process<'a>(
         &'a mut self,
         _cfg: &UdfCfg<Process>,
@@ -32,7 +41,8 @@ impl BasicUdf for Jsonify {
 
 /// Convert a `SqlResult` to a `serde_json::Value`
 ///
-/// Return the apropriate type if possible, `Null` otherwise
+/// Return the apropriate type if possible (`String` or `Number`), `Null`
+/// otherwise
 fn res_to_json_val(source: SqlResult) -> Value {
     match source {
         SqlResult::String(Some(v)) => Value::String(String::from_utf8_lossy(v).into_owned()),
@@ -40,10 +50,7 @@ fn res_to_json_val(source: SqlResult) -> Value {
             .map(|f| Value::Number(f))
             .unwrap_or(Value::Null),
         SqlResult::Int(Some(v)) => Value::Number(v.into()),
-        SqlResult::Decimal(Some(v)) => {
-            eprintln!("Got decimal {v:?}");
-            Value::String("decimal".to_owned())
-            },
+        SqlResult::Decimal(Some(v)) => v.parse().map(|f| Value::Number(f)).unwrap_or(Value::Null),
         _ => Value::Null,
     }
 }
