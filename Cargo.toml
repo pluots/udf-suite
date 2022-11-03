@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "udf-jsonify",
+    "udf-lipsum",
+    "udf-uuid",
+]
