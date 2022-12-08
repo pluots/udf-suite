@@ -8,5 +8,5 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
-udf = "0.3.6"
+udf = { version = "0.4.2", features = ["mock"] }
 serde_json = "1.0"
