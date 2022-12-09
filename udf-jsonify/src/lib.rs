@@ -99,7 +99,7 @@ mod tests {
         s.push_str(r#""int":500,"#);
         s.push_str(r#""neg_int":-500,"#);
         s.push_str(r#""string":"some string""#);
-        s.push_str(r#"}"#);
+        s.push('}');
 
         let mut jsonify = Jsonify::init(cfg.as_init(), arglist.as_init()).unwrap();
         let res = jsonify.process(cfg.as_process(), arglist.as_process(), None);
