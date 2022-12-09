@@ -73,7 +73,7 @@ jobs:
         # Setup vcpkg & install libmysql
         if: matrix.build == 'windows-msvc'
         run: |
-          git clone https://github.com/Microsoft/vcpkg c:\projects\vcpkg
+          git clone https://github.com/Microsoft/vcpkg --depth 1 c:\projects\vcpkg
           c:\projects\vcpkg\bootstrap-vcpkg.bat
           set VCPKG_ROOT=c:\projects\vcpkg
           echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
