@@ -52,7 +52,6 @@ jobs:
           - build: linux
             os: ubuntu-latest
             target: x86_64-unknown-linux-musl
-            # extension: ''
           # - build: macos
           #   os: macos-latest
           #   target: x86_64-apple-darwin
@@ -61,8 +60,10 @@ jobs:
             os: windows-latest
             target: x86_64-pc-windows-msvc
 
-    name: "Test on ${{ matrix.name }} (cargo test)"
+    name: "Test on ${{ matrix.os }} (cargo test)"
     runs-on: ${{ matrix.os }}
+    env:
+      MYSQLCLIENT_LIB_DIR: C:\mysql\lib
     steps:
       - uses: actions/checkout@v2
       - name: List files
