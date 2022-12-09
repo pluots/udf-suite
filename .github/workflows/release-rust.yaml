@@ -124,8 +124,8 @@ jobs:
       - name: Build archive
         shell: bash
         run: |
-          echo '\nWorking directory:' && pwd
-          echo '\nls:' && ls
+          echo 'Working directory:' && pwd
+          echo 'ls:' && ls
 
           # outdir="$(ci/cargo-out-dir "${{ env.TARGET_DIR }}")"
           # outdir=target/release/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}${{ matrix.extension }}
@@ -134,10 +134,11 @@ jobs:
 
           # Remove leading 'v' for use where needed
           ref_name_stripped=$(echo $ref_name | perl -0pe 's/^v//')
-          echo "\nRef name: \"$ref_name\""
-          echo "\nRef name stripped: \"$ref_name_stripped\""
+          echo "Ref name: \"$ref_name\""
+          echo "Ref name stripped: \"$ref_name_stripped\""
 
           staging="udfsuite-$ref_name-${{ matrix.target }}"
+          mkdir "$staging"
 
           # Remove the "unreleased" section from our changelog
           perl -0777 -i -pe "s/\n*(<\!-- next-header -->.*## \[Unreleased\].*?\n)(?=\n*^## )//gms" CHANGELOG.md
@@ -148,7 +149,7 @@ jobs:
           perl -0777 -ne "print /(## \[$ref_name_stripped\].*?\n)(?=\n*^## )/gms" CHANGELOG.md > RNOTES.md
           # Select the diff URL for this version only
           perl -0777 -ne "print /\[$ref_name_stripped\]:.*?\n/gms" CHANGELOG.md >> RNOTES.md
-          echo "\nRelease notes:" && cat RNOTES.md
+          echo "Release notes:" && cat RNOTES.md
 
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
             cp "target/${{ matrix.target }}/release/*.dll" "$staging/"
