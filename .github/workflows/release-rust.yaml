@@ -69,6 +69,15 @@ jobs:
           echo "cargo command is: ${{ env.CARGO }}"
           echo "target flag is: ${{ env.TARGET_FLAGS }}"
           echo "target dir is: ${{ env.TARGET_DIR }}"
+      - name: Install libmysql (windows)
+        # Setup vcpkg & install libmysql
+        if: matrix.build == 'windows-msvc'
+        run: |
+          git clone https://github.com/Microsoft/vcpkg c:\projects\vcpkg
+          c:\projects\vcpkg\bootstrap-vcpkg.bat
+          set VCPKG_ROOT=c:\projects\vcpkg
+          echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
+          %VCPKG_ROOT%\vcpkg.exe install libmysql
         # Perform build
       - uses: actions-rs/cargo@v1
         with:
@@ -80,11 +89,12 @@ jobs:
           ls "target/${{ matrix.target }}"
           ls "target/${{ matrix.target }}/release"
       - name: Strip release binary (linux and macos)
-        # Remove debug symbols
         if: matrix.build == 'linux' || matrix.build == 'macos'
+        # Remove debug symbols
+        # These will exit 1 if the symbols aren't found, so we need to true-guard
         run: |
-          strip "target/${{ matrix.target }}/release/"*.so
-          strip "target/${{ matrix.target }}/release/"*.dylib
+          strip "target/${{ matrix.target }}/release/"*.so || true
+          strip "target/${{ matrix.target }}/release/"*.dylib || true
         # Create .zip or .tar.gz file
       - name: Build archive
         shell: bash
