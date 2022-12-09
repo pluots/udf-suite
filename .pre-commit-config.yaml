@@ -19,3 +19,13 @@ repos:
         entry: cargo fmt
         args: ["--"]
         types_or: ["rust"]
+
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.170
+    hooks:
+      - id: ruff
