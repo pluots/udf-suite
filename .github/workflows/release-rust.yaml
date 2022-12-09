@@ -83,8 +83,8 @@ jobs:
         # Remove debug symbols
         if: matrix.build == 'linux' || matrix.build == 'macos'
         run: |
-          strip "target/${{ matrix.target }}/release/*.so"
-          strip "target/${{ matrix.target }}/release/*.dylib"
+          strip "target/${{ matrix.target }}/release/"*.so
+          strip "target/${{ matrix.target }}/release/"*.dylib
         # Create .zip or .tar.gz file
       - name: Build archive
         shell: bash
