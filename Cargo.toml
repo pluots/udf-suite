@@ -4,4 +4,5 @@ members = [
     "udf-jsonify",
     "udf-lipsum",
     "udf-uuid",
+    "test-integration",
 ]

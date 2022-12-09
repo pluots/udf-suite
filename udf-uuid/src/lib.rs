@@ -5,11 +5,11 @@ use mac_address::get_mac_address;
 use udf::prelude::*;
 use uuid::Uuid;
 
-/// 
-struct UuidGenerateV1{
+///
+struct UuidGenerateV1 {
     /// We save the mac address during the `init` call because that won't change.
     /// Saves a few ms, maybe
-    mac: [u8; 6]
+    mac: [u8; 6],
 }
 
 #[register]
@@ -23,12 +23,12 @@ impl BasicUdf for UuidGenerateV1 {
                 args.len()
             ))
         } else {
-            Ok(Self{
+            Ok(Self {
                 mac: get_mac_address()
-                .ok()
-                .flatten()
-                .map(|m| m.bytes())
-                .unwrap_or([0u8; 6])
+                    .ok()
+                    .flatten()
+                    .map(|m| m.bytes())
+                    .unwrap_or([0u8; 6]),
             })
         }
     }
@@ -43,7 +43,6 @@ impl BasicUdf for UuidGenerateV1 {
         Ok(Uuid::now_v1(&self.mac).as_hyphenated().to_string())
     }
 }
-
 
 /// V1 UUID with randomized MAC address
 struct UuidGenerateV1mc;
@@ -78,7 +77,6 @@ impl BasicUdf for UuidGenerateV1mc {
     }
 }
 
-
 // /// V1 UUID with randomized MAC address
 // struct UuidGenerateV1arg;
 
@@ -104,7 +102,6 @@ impl BasicUdf for UuidGenerateV1mc {
 //         _args: &ArgList<Process>,
 //         _error: Option<NonZeroU8>,
 //     ) -> Result<Self::Returns<'a>, ProcessError> {
-        
 
 //         Ok(Uuid::now_v1(&fake_mac).as_hyphenated().to_string())
 //     }
@@ -173,7 +170,10 @@ impl BasicUdf for UuidNsDns {
 
     fn init(cfg: &UdfCfg<Init>, args: &ArgList<Init>) -> Result<Self, String> {
         if !args.is_empty() {
-            Err(format!("uuid_ns_dns takes 0 arguments but got {}", args.len()))
+            Err(format!(
+                "uuid_ns_dns takes 0 arguments but got {}",
+                args.len()
+            ))
         } else {
             cfg.set_is_const(true);
             Ok(Self)
@@ -198,7 +198,10 @@ impl BasicUdf for UuidNsUrl {
 
     fn init(cfg: &UdfCfg<Init>, args: &ArgList<Init>) -> Result<Self, String> {
         if !args.is_empty() {
-            Err(format!("uuid_ns_url takes 0 arguments but got {}", args.len()))
+            Err(format!(
+                "uuid_ns_url takes 0 arguments but got {}",
+                args.len()
+            ))
         } else {
             cfg.set_is_const(true);
             Ok(Self)
@@ -223,7 +226,10 @@ impl BasicUdf for UuidNsOid {
 
     fn init(cfg: &UdfCfg<Init>, args: &ArgList<Init>) -> Result<Self, String> {
         if !args.is_empty() {
-            Err(format!("uuid_ns_oid takes 0 arguments but got {}", args.len()))
+            Err(format!(
+                "uuid_ns_oid takes 0 arguments but got {}",
+                args.len()
+            ))
         } else {
             cfg.set_is_const(true);
             Ok(Self)
@@ -267,3 +273,33 @@ impl BasicUdf for UuidNsX500 {
         Ok(Uuid::NAMESPACE_X500.as_hyphenated().to_string())
     }
 }
+
+// struct UuidIsValid;
+
+// #[register]
+// impl BasicUdf for UuidIsValid {
+//     type Returns<'a> = i64;
+
+//     fn init(_cfg: &UdfCfg<Init>, args: &ArgList<Init>) -> Result<Self, String> {
+//         if args.len() != 1 {
+//             Err(format!(
+//                 "uuid_generate_v1 takes 1 arguments but got {}",
+//                 args.len()
+//             ))
+//         } else {
+//             args.get(0).unwrap().set_type_coercion(SqlType::String);
+//             Ok(Self)
+//         }
+//     }
+
+//     fn process<'a>(
+//         &'a mut self,
+//         _cfg: &UdfCfg<Process>,
+//         args: &ArgList<Process>,
+//         _error: Option<NonZeroU8>,
+//     ) -> Result<Self::Returns<'a>, ProcessError> {
+//         let arg = args.get(0).unwrap().value().as_string().unwrap();
+
+//         // Ok(Uuid::now_v1(&self.mac).as_hyphenated().to_string())
+//     }
+// }

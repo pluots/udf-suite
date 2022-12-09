@@ -1,0 +1,12 @@
+[package]
+name = "test-integration"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+diesel = { version = "2.0.2", features = ["mysql"] }
+lazy_static = "1.4.0"
+
+[dev-dependencies]
+regex = "1.7"
