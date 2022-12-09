@@ -74,8 +74,13 @@ jobs:
         with:
           command: build
           args: --release --verbose --target ${{ matrix.target }}
-        # Remove debug symbols
+      - name: Show output
+        run: |
+          ls target
+          ls "target/${{ matrix.target }}"
+          ls "target/${{ matrix.target }}/release"
       - name: Strip release binary (linux and macos)
+        # Remove debug symbols
         if: matrix.build == 'linux' || matrix.build == 'macos'
         run: |
           strip "target/${{ matrix.target }}/release/*.so"
