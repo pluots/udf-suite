@@ -1,12 +1,9 @@
-# Dockerfile to build the udf-examples crate and load it. Build with:
+# Dockerfile to build the udf-examples crate and load it. Usage:
 #
 # ```
+# # build image
 # docker build . --tag mdb-udf-suite
-# ```
-#
-# And run with
-#
-# ```
+# # Run image
 # docker run --rm -e MARIADB_ROOT_PASSWORD=example mdb-udf-suite
 # ```
 

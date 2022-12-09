@@ -44,37 +44,41 @@ MariaDB [db]> select jsonify(uuid() as uuid, qty as quantity, cost) from t1 limi
 
 ## Building
 
-To build in docker:
+To build everything, you can run:
+
+```
+cargo build --release
+```
+
+Which will produce the desired dynamic library files in `target/release`.
+Specific functions can also be specified with `-p` (e.g.
+`cargo build --release -p udf-uuid`).
+
+This repository also comes with a docker file that simplifies getting an image
+up and running:
 
 ```sh
-docker run --rm -it \
-  -v "$(pwd):/build" \
-  -e CARGO_HOME=/build/.docker-cargo \
-  rustlang/rust:nightly \
-  bash -c "cd /build; cargo build --release"
-```
+# build the image
+docker build . --tag mdb-udf-suite
 
-To run:
+# run it
+docker run --rm -d
+  -e MARIADB_ROOT_PASSWORD=example
+  --name mariadb_udf_suite
+  mdb-udf-suite
 
-```bash
-# Add -d to the arguments if you don't want to keep the window open
-docker run --rm -it  \
-  -v $(pwd)/target:/target \
-  -e MARIADB_ROOT_PASSWORD=banana \
-  --name mariadb_udf_suite \
-  mariadb
-```
-
-```bash
-docker exec -it mariadb_udf_suite bash
-```
-
-```bash
-cp /target/release/libudf*.so /usr/lib/mysql/plugin/
-mysql -pbanana
+#
+docker exec -it mariadb_udf_suite mysql -pexample
 ```
 
 
 ```sql
 CREATE FUNCTION jsonify RETURNS string SONAME 'libudf_jsonify.so';
+CREATE FUNCTION uuid_generate_v1 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_generate_v4 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_nil RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_ns_dns RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_ns_url RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_ns_oid RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_ns_x500 RETURNS string SONAME 'libudf_uuid.so';
 ```
