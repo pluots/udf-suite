@@ -73,10 +73,10 @@ jobs:
         # Setup vcpkg & install libmysql
         if: matrix.build == 'windows-msvc'
         run: |
-          git clone https://github.com/Microsoft/vcpkg c:\projects\vcpkg
-          c:\projects\vcpkg\bootstrap-vcpkg.bat
-          set VCPKG_ROOT=c:\projects\vcpkg
-          echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
+          # git clone https://github.com/Microsoft/vcpkg c:\projects\vcpkg
+          # c:\projects\vcpkg\bootstrap-vcpkg.bat
+          # set VCPKG_ROOT=c:\projects\vcpkg
+          # echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
           %VCPKG_ROOT%\vcpkg.exe install libmysql
         # Perform build
       - uses: actions-rs/cargo@v1
@@ -131,8 +131,8 @@ jobs:
             7z a "$staging.zip" "$staging"
             echo "ASSET=$staging.zip" >> $GITHUB_ENV
           else
-            cp "target/${{ matrix.target }}/release/*.so" "$staging/"
-            cp "target/${{ matrix.target }}/release/*.dylib" "$staging/"
+            cp "target/${{ matrix.target }}/release/"*.so "$staging/" || true
+            cp "target/${{ matrix.target }}/release/"*.dylib "$staging/" || true
             tar czf "$staging.tar.gz" "$staging"
             echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
           fi
