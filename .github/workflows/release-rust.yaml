@@ -20,20 +20,20 @@ jobs:
           - build: linux
             os: ubuntu-latest
             target: x86_64-unknown-linux-musl
-            extension: ''
+            # extension: ''
             # Unsuccessful compilation; try on local
           # - build: linux-arm
           #   os: ubuntu-latest
           #   target: arm-unknown-linux-gnueabihf
           #   extension: ''
-          - build: macos
-            os: macos-latest
-            target: x86_64-apple-darwin
-            extension: ''
+          # - build: macos
+          #   os: macos-latest
+          #   target: x86_64-apple-darwin
+          #   extension: ''
           - build: windows-msvc
             os: windows-latest
             target: x86_64-pc-windows-msvc
-            extension: .exe
+            # extension: .exe
     env:
       CARGO: cargo
       TARGET_DIR: ./target
@@ -73,21 +73,13 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: build
-          # We only want to build zspell, not zspell_py (does not support cdylib)
-          args: --package zspell --release --verbose --target ${{ matrix.target }}
+          args: --release --verbose --target ${{ matrix.target }}
         # Remove debug symbols
       - name: Strip release binary (linux and macos)
         if: matrix.build == 'linux' || matrix.build == 'macos'
-        run: strip "target/${{ matrix.target }}/release/zspell"
-        # Remove debug symbols
-      - name: Strip release binary (arm)
-        if: matrix.build == 'linux-arm'
-        run: >
-          docker run --rm -v
-          "$PWD/target:/target:Z"
-          rustembedded/cross:arm-unknown-linux-gnueabihf
-          arm-linux-gnueabihf-strip
-          /target/arm-unknown-linux-gnueabihf/release/zspell
+        run: |
+          strip "target/${{ matrix.target }}/release/*.so"
+          strip "target/${{ matrix.target }}/release/*.dylib"
         # Create .zip or .tar.gz file
       - name: Build archive
         shell: bash
@@ -97,7 +89,7 @@ jobs:
 
           # outdir="$(ci/cargo-out-dir "${{ env.TARGET_DIR }}")"
           # outdir=target/release/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}${{ matrix.extension }}
-          cargo_outdir="$(find "${{ env.TARGET_DIR }}" -name zspell-stamp -print0 | xargs -0 ls -t | head -n1 | xargs dirname)"
+          cargo_outdir="$(find "${{ env.TARGET_DIR }}" -name udfsuite-stamp -print0 | xargs -0 ls -t | head -n1 | xargs dirname)"
           ref_name=${GITHUB_REF##*/}
 
           # Remove leading 'v' for use where needed
@@ -105,14 +97,12 @@ jobs:
           echo "\nRef name: \"$ref_name\""
           echo "\nRef name stripped: \"$ref_name_stripped\""
 
-          staging="zspell-$ref_name-${{ matrix.target }}"
+          staging="udfsuite-$ref_name-${{ matrix.target }}"
 
           mkdir -p "$staging"/{completion,doc}
 
           cp {README.md,LICENSE} "$staging/"
           cp CHANGELOG.md "$staging/doc/"
-          cp "$cargo_outdir"/zspell.1 "$staging/doc"
-          cp "$cargo_outdir"/{_zspell,_zspell.ps1,zspell.bash,zspell.elv,zspell.fish} "$staging/completion"
 
           # Select the release notes from our latest version only
           perl -0777 -ne "print /(## \[$ref_name_stripped\].*?\n)(?=\n*^## )/gms" CHANGELOG.md > RNOTES.md
@@ -122,11 +112,12 @@ jobs:
           echo "\nRelease notes:" && cat RNOTES.md
 
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            cp "target/${{ matrix.target }}/release/zspell.exe" "$staging/"
+            cp "target/${{ matrix.target }}/release/*.dll" "$staging/"
             7z a "$staging.zip" "$staging"
             echo "ASSET=$staging.zip" >> $GITHUB_ENV
           else
-            cp "target/${{ matrix.target }}/release/zspell" "$staging/"
+            cp "target/${{ matrix.target }}/release/*.so" "$staging/"
+            cp "target/${{ matrix.target }}/release/*.dylib" "$staging/"
             tar czf "$staging.tar.gz" "$staging"
             echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
           fi
@@ -135,7 +126,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          GITHUB_REPOSITORY: pluots/zspell
+          GITHUB_REPOSITORY: pluots/udf-suite
         with:
           body_path: RNOTES.md
           # note you'll typically need to create a personal access token
@@ -143,32 +134,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             ${{ env.ASSET }}
-
-  deploy_book:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Install mdbook
-      run: |
-        mkdir mdbook
-        curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz \
-        | tar -xz --directory=./mdbook
-        echo `pwd`/mdbook >> $GITHUB_PATH
-    - name: Deploy GitHub Pages
-      run: |
-        # This assumes your book is in the root of your repository.
-        # Just add a `cd` here if you need to change to another directory.
-        mdbook build
-        git worktree add gh-pages
-        git config user.name "Deploy from CI"
-        git config user.email ""
-        cd gh-pages
-        # Delete the ref to avoid keeping history.
-        git update-ref -d refs/heads/gh-pages
-        rm -rf *
-        mv ../book/* .
-        git add .
-        git commit -m "Deploy $GITHUB_SHA to gh-pages"
-        git push --force --set-upstream origin gh-pages
