@@ -76,7 +76,7 @@ jobs:
           git clone https://github.com/Microsoft/vcpkg --depth 1 c:\projects\vcpkg
           c:\projects\vcpkg\bootstrap-vcpkg.bat
           set VCPKG_ROOT=c:\projects\vcpkg
-          echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
+          # echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
           %VCPKG_ROOT%\vcpkg.exe install libmysql
           # git clone https://github.com/Microsoft/vcpkg
           # .\vcpkg\bootstrap-vcpkg.bat
