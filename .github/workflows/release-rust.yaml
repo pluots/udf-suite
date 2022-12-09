@@ -141,7 +141,7 @@ jobs:
           mkdir "$staging"
 
           # Remove the "unreleased" section from our changelog
-          perl -0777 -i -pe "s/\n*(<\!-- next-header -->.*## \[Unreleased\].*?\n)(?=\n*^## )//gms" CHANGELOG.md
+          perl -0777 -i -pe "s/\n*(<\!-- next-header -->.*## \[Unreleased\].*?\n)(?:## |<\!--)//gms" CHANGELOG.md
 
           cp {README.md,LICENSE,CHANGELOG.md} "$staging/"
 
