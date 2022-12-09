@@ -78,11 +78,31 @@ jobs:
           # set VCPKG_ROOT=c:\projects\vcpkg
           # echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
           # %VCPKG_ROOT%\vcpkg.exe install libmysql
-          git clone https://github.com/Microsoft/vcpkg
-          .\vcpkg\bootstrap-vcpkg.bat
-          set VCPKG_ROOT=.\vcpkg
-          echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
-          %VCPKG_ROOT%\vcpkg.exe install libmysql
+          # git clone https://github.com/Microsoft/vcpkg
+          # .\vcpkg\bootstrap-vcpkg.bat
+          # set VCPKG_ROOT=.\vcpkg
+          # echo yes > %VCPKG_ROOT%\Downloads\AlwaysAllowDownloads
+          # %VCPKG_ROOT%\vcpkg.exe install libmysql
+
+      # install cmake
+      - uses: lukka/get-cmake@latest
+        if: matrix.build == 'windows-msvc'
+      - name: Restore artifacts / setup vcpkg
+        if: matrix.build == 'windows-msvc'
+        uses: lukka/run-vcpkg@v10
+      - name: Run CMake consuming CMakePreset.json and vcpkg.json
+        if: matrix.build == 'windows-msvc'
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: 'ninja-multi-vcpkg'
+          buildPreset: 'ninja-multi-vcpkg'
+      - name: Install libmysql (windows)
+        # Setup vcpkg & install libmysql
+        if: matrix.build == 'windows-msvc'
+        run: |
+          vcpkg install libmysql
+
+
         # Perform build
       - uses: actions-rs/cargo@v1
         with:
