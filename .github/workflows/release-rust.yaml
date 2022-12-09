@@ -119,14 +119,13 @@ jobs:
 
           staging="udfsuite-$ref_name-${{ matrix.target }}"
 
-          mkdir -p "$staging"/{completion,doc}
+          # Remove the "unreleased" section from our changelog
+          perl -0777 -i -pe "s/\n*(<\!-- next-header -->.*## \[Unreleased\].*?\n)(?=\n*^## )//gms" CHANGELOG.md
 
-          cp {README.md,LICENSE} "$staging/"
-          cp CHANGELOG.md "$staging/doc/"
+          cp {README.md,LICENSE,CHANGELOG.md} "$staging/"
 
           # Select the release notes from our latest version only
           perl -0777 -ne "print /(## \[$ref_name_stripped\].*?\n)(?=\n*^## )/gms" CHANGELOG.md > RNOTES.md
-          echo '\n\n' >> "$staging/doc/RNOTES.md"
           # Select the diff URL for this version only
           perl -0777 -ne "print /\[$ref_name_stripped\]:.*?\n/gms" CHANGELOG.md >> RNOTES.md
           echo "\nRelease notes:" && cat RNOTES.md
