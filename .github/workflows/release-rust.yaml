@@ -116,7 +116,7 @@ jobs:
           ls "target/${{ matrix.target }}/release/"
 
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            cp "target/${{ matrix.target }}/release/*.dll" "$staging/"
+            cp target/${{ matrix.target }}/release/*.dll "$staging/"
             7z a "$staging.zip" "$staging"
             echo "ASSET=$staging.zip" >> $GITHUB_ENV
           else
