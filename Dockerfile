@@ -16,9 +16,13 @@ COPY . .
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/build/target \
     cargo build --release \
+    # --features "logging-debug" \
     && mkdir /output \
     && cp target/release/*.so /output
 
 FROM mariadb:10.9
 
 COPY --from=build /output/* /usr/lib/mysql/plugin/
+
+ENV RUST_LIB_BACKTRACE 1
+RUN export RUST_LIB_BACKTRACE=1

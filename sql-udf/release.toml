@@ -1,0 +1,5 @@
+allow-branch = ["main"]
+shared-version = true
+# Single commit for all crates since we are in one repo
+consolidate-commits = true
+tag-name = "v{{version}}"

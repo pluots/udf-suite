@@ -1,0 +1,75 @@
+[package]
+name = "udf"
+version = "0.4.5"
+rust-version = "1.65"
+edition = "2021"
+description = "Easily create user defined functions (UDFs) for MariaDB and MySQL."
+repository = "https://github.com/pluots/sql-udf"
+readme = "../README.md"
+license = "Apache-2.0"
+keywords = ["sql", "udf"]
+publish = true
+
+[dependencies]
+chrono = "0.4.22"
+udf-macros = { path = "../udf-macros", version = "0.4.5" }
+udf-sys = { path = "../udf-sys", version = "0.4.5" }
+
+[features]
+mock = []           # enable this feature for the `mock` module
+logging-debug = []  # enable this feature to turn on debug printing
+
+[package.metadata.release]
+shared-version = true
+
+[package.metadata.docs.rs]
+features = ["mock"]
+
+# Can't run replacements at workspace root. Need to use this "hacky" sort of way.
+[[package.metadata.release.pre-release-replacements]]
+file = "../CHANGELOG.md"
+search = "Unreleased"
+replace = "{{version}}"
+
+[[package.metadata.release.pre-release-replacements]]
+file = "../CHANGELOG.md"
+search = "\\.\\.\\.HEAD"
+replace = "...{{tag_name}}"
+exactly = 1
+
+[[package.metadata.release.pre-release-replacements]]
+file = "../CHANGELOG.md"
+search = "ReleaseDate"
+replace = "{{date}}"
+
+[[package.metadata.release.pre-release-replacements]]
+file = "../CHANGELOG.md"
+search = "<!-- next-header -->"
+replace = """\
+  <!-- next-header -->\n\n\
+  ## [Unreleased] - ReleaseDate\n\n\
+  ### Added\n\n\
+  ### Changed\n\n\
+  ### Removed\n\n\
+  """
+exactly = 1
+
+[[package.metadata.release.pre-release-replacements]]
+file = "../CHANGELOG.md"
+search = "<!-- next-url -->"
+replace = """\
+  <!-- next-url -->\n\
+  [Unreleased]: https://github.com/pluots/sql-udf/compare/{{tag_name}}...HEAD\
+  """
+exactly = 1
+
+[[package.metadata.release.pre-release-replacements]]
+file = "Cargo.toml"
+# Need \d match so we don't accidentally match our pattern here
+search = 'udf-macros = \{ path = "../udf-macros", version = "\d.*" \}'
+replace = 'udf-macros = { path = "../udf-macros", version = "{{version}}" }'
+
+[[package.metadata.release.pre-release-replacements]]
+file = "Cargo.toml"
+search = 'udf-sys = \{ path = "../udf-sys", version = "\d.*" \}'
+replace = 'udf-sys = { path = "../udf-sys", version = "{{version}}" }'
