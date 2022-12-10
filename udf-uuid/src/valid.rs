@@ -27,7 +27,7 @@ impl BasicUdf for UuidIsValid {
         let Some(in_str) = input.as_string() else {
             return Ok(0)
         };
-        
+
         let in_rep = in_str.replace('-', ""); // Remove hyphens
         let res = match Uuid::try_parse(&in_rep) {
             Ok(_) => 1,

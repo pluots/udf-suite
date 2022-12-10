@@ -39,7 +39,6 @@ impl BasicUdf for UuidGenerateV1 {
     }
 }
 
-
 /// V1 UUID with randomized MAC address
 #[derive(Debug)]
 struct UuidGenerateV1mc;
