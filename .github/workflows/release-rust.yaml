@@ -103,7 +103,7 @@ jobs:
           perl -0777 -ne "print /(## \[$ref_name_stripped\].*?\n)(?=\n*^## )/gms" CHANGELOG.md > RNOTES.md
           # Select the diff URL for this version only
           perl -0777 -ne "print /\[$ref_name_stripped\]:.*?\n/gms" CHANGELOG.md >> RNOTES.md
-          
+
           echo "Release notes:" && cat RNOTES.md
           echo Output:
           ls "target/${{ matrix.target }}/release/"
