@@ -77,13 +77,6 @@ jobs:
           ls target
           ls "target/${{ matrix.target }}"
           ls "target/${{ matrix.target }}/release"
-      - name: Strip release binary (linux and macos)
-        if: matrix.build == 'linux' || matrix.build == 'macos'
-        # Remove debug symbols
-        # These will exit 1 if the symbols aren't found, so we need to true-guard
-        run: |
-          strip "target/${{ matrix.target }}/release/"*.so || true
-          strip "target/${{ matrix.target }}/release/"*.dylib || true
         # Create .zip or .tar.gz file
       - name: Build archive
         shell: bash

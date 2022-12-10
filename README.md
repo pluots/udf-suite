@@ -1,11 +1,22 @@
 # udf-suite
 
-A collection of UDFs for MariaDB & MySQL, written using the rust
-[`udf`](docs.rs/udf) library.
+A collection of UDFs for MariaDB & MySQL, written using the rust [`udf`]
+library. For instructions on how to use these libraries, jump to the
+[Installation](#installation) section.
+
+[`udf`]: docs.rs/udf
 
 ## Included UDFs
 
 ### UUID
+
+Provide UUID functions similar to the Postges [`uuid-osp`] package:
+
+
+
+See the [UUID Readme](/udf-uuid/README.md) for more information
+
+[`uuid-osp`]: https://www.postgresql.org/docs/current/uuid-ossp.html
 
 ### Jsonify
 
@@ -41,8 +52,28 @@ MariaDB [db]> select jsonify(uuid() as uuid, qty as quantity, cost) from t1 limi
 ```
 
 
+## Lipsum
 
-## Building
+Uses the [lipsum crate] to generate lipsum strings.
+
+
+```sql
+MariaDB [(none)]> select lipsum(10);
++------------------------------------------------------------------+
+| lipsum(10)                                                       |
++------------------------------------------------------------------+
+| Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do. |
++------------------------------------------------------------------+
+1 row in set (0.000 sec)
+```
+
+[lipsum crate]: https://docs.rs/lipsum/latest/lipsum/
+
+
+## Installation
+
+
+## Building from Source
 
 To build everything, you can run:
 
@@ -74,11 +105,14 @@ docker exec -it mariadb_udf_suite mysql -pexample
 
 ```sql
 CREATE FUNCTION jsonify RETURNS string SONAME 'libudf_jsonify.so';
+CREATE FUNCTION lipsum RETURNS string SONAME 'libudf_lipsum.so';
 CREATE FUNCTION uuid_generate_v1 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_generate_v1mc RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_generate_v4 RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_nil RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_dns RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_url RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_oid RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_x500 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_is_valid RETURNS integer SONAME 'libudf_uuid.so';
 ```

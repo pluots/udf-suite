@@ -24,8 +24,12 @@ impl BasicUdf for UuidIsValid {
         _error: Option<NonZeroU8>,
     ) -> Result<Self::Returns<'a>, ProcessError> {
         let input = args.get(0).unwrap().value();
-        let input = input.as_string().unwrap().replace('-', ""); // Remove hyphens
-        let res = match Uuid::try_parse(&input) {
+        let Some(in_str) = input.as_string() else {
+            return Ok(0)
+        };
+        
+        let in_rep = in_str.replace('-', ""); // Remove hyphens
+        let res = match Uuid::try_parse(&in_rep) {
             Ok(_) => 1,
             Err(_) => 0,
         };
