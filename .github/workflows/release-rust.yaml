@@ -88,9 +88,6 @@ jobs:
       - name: Build archive
         shell: bash
         run: |
-          echo 'Working directory:' && pwd
-          echo 'ls:' && ls
-
           # outdir="$(ci/cargo-out-dir "${{ env.TARGET_DIR }}")"
           # outdir=target/release/${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}${{ matrix.extension }}
           # cargo_outdir="$(find "${{ env.TARGET_DIR }}" -name udfsuite-stamp -print0 | xargs -0 ls -t | head -n1 | xargs dirname)"
@@ -113,7 +110,10 @@ jobs:
           perl -0777 -ne "print /(## \[$ref_name_stripped\].*?\n)(?=\n*^## )/gms" CHANGELOG.md > RNOTES.md
           # Select the diff URL for this version only
           perl -0777 -ne "print /\[$ref_name_stripped\]:.*?\n/gms" CHANGELOG.md >> RNOTES.md
+          
           echo "Release notes:" && cat RNOTES.md
+          echo Output:
+          ls "target/${{ matrix.target }}/release/"
 
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
             cp "target/${{ matrix.target }}/release/*.dll" "$staging/"
