@@ -12,8 +12,7 @@ pub fn validate_arg_count(count: usize, expected: usize, fn_name: &str) -> Resul
         };
 
         Err(format!(
-            "{} takes {} {} but got {}",
-            fn_name, expected, pluralized, count
+            "{fn_name} takes {expected} {pluralized} but got {count}"
         ))
     } else {
         Ok(())
