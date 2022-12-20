@@ -1,8 +1,0 @@
-[workspace]
-
-members = [
-    "udf",
-    "udf-macros",
-    "udf-sys",
-    "udf-examples"
-]
