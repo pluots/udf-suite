@@ -133,6 +133,7 @@ jobs:
           docker run --rm -d
           -p 12305:3306
           -e MARIADB_ROOT_PASSWORD=example
+          --name mdb-udf-suite-container
           mdb-example-so
       - uses: actions-rs/toolchain@v1
         with:
@@ -145,33 +146,40 @@ jobs:
       - name: Run integration testing
         # Run only integration tests with `--test '*'`
         run: cargo test -p test-integration --test '*'
+      - name: Print docker logs
+        if: always()
+        run: |
+          docker logs mdb-udf-suite-container
+          # If any critical / debug options were printed, error out
+          docker logs mdb-udf-suite-container 2>&1 | grep -E '\[(Critical|Error)\]' || exit 0 && exit 1;
+          docker stop mdb-udf-suite-container
 
-  # miri:
-  #   name: Miri
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/cache@v3
-  #       id: cache-cargo
-  #       with:
-  #         path: |
-  #           ~/.cargo/bin/
-  #           ~/.cargo/registry/index/
-  #           ~/.cargo/registry/cache/
-  #           ~/.cargo/git/db/
-  #           target/
-  #         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-  #     - uses: actions-rs/toolchain@v1
-  #       with:
-  #         profile: minimal
-  #         toolchain: nightly
-  #         override: true
-  #     - run: rustup component add miri
-  #     - name: Run Miri
-  #       env:
-  #         # Can't use chrono for time in isolation
-  #         MIRIFLAGS: -Zmiri-disable-isolation
-  #       run: cargo miri test
+  miri:
+    name: Miri
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v3
+        id: cache-cargo
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+      - run: rustup component add miri
+      - name: Run Miri
+        env:
+          # Can't use chrono for time in isolation
+          MIRIFLAGS: -Zmiri-disable-isolation
+        run: cargo miri test
 
   fmt:
     name: "Format (cargo fmt)"
