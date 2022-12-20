@@ -25,7 +25,7 @@ See the [UUID Readme](/udf-uuid/README.md) for more information
 Provide the function `jsonify`, which quickly creates JSON output for any given
 inputs.
 
-```
+```sql
 MariaDB [db]> select jsonify(qty, cost, class) from t1 limit 4;
 +-------------------------------------+
 | jsonify(qty, cost, class)           |
@@ -40,7 +40,7 @@ MariaDB [db]> select jsonify(qty, cost, class) from t1 limit 4;
 
 Aliasing also works to change key names:
 
-```
+```sql
 MariaDB [db]> select jsonify(uuid() as uuid, qty as quantity, cost) from t1 limit 4;
 +----------------------------------------------------------------------------+
 | jsonify(uuid() as uuid, qty as quantity, cost)                             |
