@@ -78,7 +78,7 @@ def update_all_tomls(level: SemvarLevel, execute: bool = False) -> str:
                 next_version = get_next_semvar(
                     match.groups(), SemvarLevel[level.upper()]
                 )
-                next_version_toml = f'version = "{next_version}"'
+                next_version_toml = f'version = "{next_version}"\n'
 
             if match:
                 res.append(next_version_toml)
