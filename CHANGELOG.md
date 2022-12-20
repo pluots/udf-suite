@@ -4,11 +4,9 @@
 
 ## [Unreleased] - ReleaseDate
 
-### Added
-
 ### Changed
 
-### Removed
+- Corrected release notes shipped with binaries
 
 
 ## [0.1.0] - 2022-12-20
@@ -21,5 +19,5 @@
 
 <!-- next-url -->
 
-[Unreleased]: https://github.com/pluots/udf-suite/compare/0.1.0...HEAD
-[0.1.0]: https://github.com/pluots/udf-suite/compare/v0.0.1...v0.1.0
+[Unreleased]: https://github.com/pluots/udf-suite/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/pluots/udf-suite/releases/tag/v0.1.0

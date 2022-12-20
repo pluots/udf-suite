@@ -15,10 +15,16 @@ CHANGELOG_TEMPLATE = (
   ## [Unreleased] - ReleaseDate\n
   ### Added\n
   ### Changed\n
-  ### Removed\n
 """
     )
     + "\n"
+)
+
+NEXT_URL_TEMPLATE = cleandoc(
+    """
+<!-- next-url -->
+
+[Unreleased]: https://github.com/pluots/udf-suite/compare/[tag_name]...HEAD"""
 )
 
 
@@ -94,18 +100,12 @@ def update_changelog(version: str, tag_name: str, execute: bool):
         s = f.read()
 
     s = s.replace("[Unreleased]", f"[{version}]")
-    s = s.replace("...HEAD", f"[{tag_name}]", 1)
+    s = s.replace("...HEAD", f"...{tag_name}", 1)
     s = s.replace("ReleaseDate", f"{date.today()}", 1)
     s = s.replace("<!-- next-header -->", CHANGELOG_TEMPLATE, 1)
     s = s.replace(
-        "<!-- next-url -->",
-        cleandoc(
-            f"""
-        <!-- next-url -->
-
-        [Unreleased]: https://github.com/pluots/udf-suite/compare/{tag_name}...HEAD\
-    """
-        ),
+        "<!-- next-url -->\n",
+        NEXT_URL_TEMPLATE.replace("[tag_name]", tag_name),
         1,
     )
 
