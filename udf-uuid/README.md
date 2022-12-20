@@ -7,12 +7,17 @@ mimic Postgres' [uuid-osp] library.
 
 ## UUID Types
 
+There are four common UUID types:
+
 * V1: MAC address + timestamp + small random portion. The MAC address and
   timestamp can be determined from a UUID
 * V3: a MD5 hash of a "namespace" UUID and "name" data. This is fully
   deterministic, there is no random component.
-* V5: same as V3, uses SHA1 instead
 * V4: fully random UUID
+* V5: same as V3, uses SHA1 instead
+
+This library is able to generate v1 and v4 UUIDs. Support for v3 and v5 will be
+added in the future.
 
 ## Available Functions
 
@@ -39,6 +44,7 @@ There are also some functions that return constant values:
 
 And a helper function:
 
+* `uuid_is_valid(uuid)`: Check whether a given UUID is valid
 
 ## Usage
 
