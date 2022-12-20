@@ -48,6 +48,8 @@ And a helper function:
 
 ## Usage
 
+Load the functions:
+
 ```sql
 CREATE FUNCTION uuid_generate_v1 RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_generate_v1mc RETURNS string SONAME 'libudf_uuid.so';
@@ -58,4 +60,18 @@ CREATE FUNCTION uuid_ns_url RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_oid RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_x500 RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_is_valid RETURNS integer SONAME 'libudf_uuid.so';
+```
+
+Usage is as follows:
+
+```sql
+SELECT uuid_generate_v1();
+SELECT uuid_generate_v1mc();
+SELECT uuid_generate_v4();
+SELECT uuid_nil();
+SELECT uuid_ns_dns();
+SELECT uuid_ns_url();
+SELECT uuid_ns_oid();
+SELECT uuid_ns_x500();
+SELECT uuid_is_valid(uuid_generate_v4());
 ```

@@ -12,7 +12,9 @@ library. For instructions on how to use these libraries, jump to the
 
 Provide UUID functions similar to the Postges [`uuid-osp`] package:
 
-
+- Generate v1 and v4 UUIDs (v3 & v5 coming soon)
+- Validate UUIDs
+- Create namespace UUIDs
 
 See the [UUID Readme](/udf-uuid/README.md) for more information
 
@@ -72,12 +74,35 @@ MariaDB [(none)]> select lipsum(10);
 
 ## Installation
 
+Compiled library binaries can be downloaded from this library's [releases] page.
+The desired files can be copied to the plugin directory (usually
+`/usr/lib/mysql/plugin`) and selectively loaded:
+
+```sql
+CREATE FUNCTION jsonify RETURNS string SONAME 'libudf_jsonify.so';
+CREATE FUNCTION lipsum RETURNS string SONAME 'libudf_lipsum.so';
+CREATE FUNCTION uuid_generate_v1 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_generate_v1mc RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_generate_v4 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_nil RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_ns_dns RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_ns_url RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_ns_oid RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_ns_x500 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_is_valid RETURNS integer SONAME 'libudf_uuid.so';
+```
+
+Note that Windows `.dll`s are built but have not been tested - please open an
+issue if you encounter any errors.
+
+[releases]: https://github.com/pluots/udf-suite/releases
+
 
 ## Building from Source
 
-To build everything, you can run:
+To build the binaries yourself, you can clone this repository and run:
 
-```
+```sh
 cargo build --release
 ```
 
@@ -93,26 +118,13 @@ up and running:
 docker build . --tag mdb-udf-suite
 
 # run it
-docker run --rm -d
-  -e MARIADB_ROOT_PASSWORD=example
-  --name mariadb_udf_suite
+docker run --rm -d \
+  -e MARIADB_ROOT_PASSWORD=example \
+  --name mariadb_udf_suite \
   mdb-udf-suite
 
-#
+# Enter a SQL shell
 docker exec -it mariadb_udf_suite mysql -pexample
 ```
 
-
-```sql
-CREATE FUNCTION jsonify RETURNS string SONAME 'libudf_jsonify.so';
-CREATE FUNCTION lipsum RETURNS string SONAME 'libudf_lipsum.so';
-CREATE FUNCTION uuid_generate_v1 RETURNS string SONAME 'libudf_uuid.so';
-CREATE FUNCTION uuid_generate_v1mc RETURNS string SONAME 'libudf_uuid.so';
-CREATE FUNCTION uuid_generate_v4 RETURNS string SONAME 'libudf_uuid.so';
-CREATE FUNCTION uuid_nil RETURNS string SONAME 'libudf_uuid.so';
-CREATE FUNCTION uuid_ns_dns RETURNS string SONAME 'libudf_uuid.so';
-CREATE FUNCTION uuid_ns_url RETURNS string SONAME 'libudf_uuid.so';
-CREATE FUNCTION uuid_ns_oid RETURNS string SONAME 'libudf_uuid.so';
-CREATE FUNCTION uuid_ns_x500 RETURNS string SONAME 'libudf_uuid.so';
-CREATE FUNCTION uuid_is_valid RETURNS integer SONAME 'libudf_uuid.so';
-```
+The UDFs can then be loaded using the `CREATE FUNCTION` statements above.
