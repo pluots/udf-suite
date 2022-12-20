@@ -56,7 +56,7 @@ MariaDB [db]> select jsonify(uuid() as uuid, qty as quantity, cost) from t1 limi
 
 ## Lipsum
 
-Uses the [lipsum crate] to generate lipsum strings.
+Uses the [lipsum crate] to generate lipsum strings with a specified word count.
 
 
 ```sql
