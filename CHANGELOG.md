@@ -4,9 +4,9 @@
 
 ## [Unreleased] - ReleaseDate
 
-### Added
-
 ### Changed
+
+- Removed unneeded debug statement from uuid generate
 
 
 ## [0.1.1] - 2022-12-20
