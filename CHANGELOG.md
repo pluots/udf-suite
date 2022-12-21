@@ -6,6 +6,13 @@
 
 ### Added
 
+### Changed
+
+
+## [0.1.3] - 2022-12-21
+
+### Added
+
 - Added support for v6 and v7 UUIDs
 
 ### Changed
@@ -38,7 +45,8 @@
 
 <!-- next-url -->
 
-[Unreleased]: https://github.com/pluots/udf-suite/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/pluots/udf-suite/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/pluots/udf-suite/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/pluots/udf-suite/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/pluots/udf-suite/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/pluots/udf-suite/releases/tag/v0.1.0
