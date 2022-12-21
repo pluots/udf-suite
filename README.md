@@ -13,6 +13,7 @@ library. For instructions on how to use these libraries, jump to the
 Provide UUID functions similar to the Postges [`uuid-osp`] package:
 
 - Generate v1 and v4 UUIDs (v3 & v5 coming soon)
+- Generate the new v6 and v7 UUIDs
 - Validate UUIDs
 - Create namespace UUIDs
 
@@ -84,7 +85,10 @@ CREATE FUNCTION lipsum RETURNS string SONAME 'libudf_lipsum.so';
 CREATE FUNCTION uuid_generate_v1 RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_generate_v1mc RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_generate_v4 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_generate_v6 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_generate_v7 RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_nil RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_max RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_dns RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_url RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_oid RETURNS string SONAME 'libudf_uuid.so';

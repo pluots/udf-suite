@@ -15,7 +15,7 @@ name: Rust Validation
 
 env:
   RUSTDOCFLAGS: -D warnings
-  RUSTFLAGS: -D warnings
+  RUSTFLAGS: "-D warnings --cfg uuid_unstable"
   CARGO_UNSTABLE_SPARSE_REGISTRY: true
 
 jobs:

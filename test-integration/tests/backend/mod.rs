@@ -6,7 +6,6 @@
 //!
 //! Run the container with `docker run --rm -d -p 12300:3300 mdb-example-so`
 
-#![cfg(test)]
 #![cfg(feature = "backend")]
 use std::collections::HashSet;
 use std::env;

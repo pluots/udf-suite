@@ -11,3 +11,7 @@ regex = "1.7"
 diesel = { version = "2.0.2", features = ["mysql"] }
 lazy_static = "1.4.0"
 uuid = { version = "1.2.1", features = ["v1", "v3", "v4", "v5", "fast-rng"] }
+
+[features]
+# Used to optionally enable integration tests
+backend = []
