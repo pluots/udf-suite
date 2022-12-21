@@ -88,7 +88,6 @@ impl BasicUdf for UuidGenerateV4 {
         _args: &ArgList<Process>,
         _error: Option<NonZeroU8>,
     ) -> Result<Self::Returns<'a>, ProcessError> {
-        dbg!(_cfg);
         Ok(Uuid::new_v4().as_hyphenated().to_string())
     }
 }
