@@ -95,7 +95,7 @@ impl BasicUdf for UuidNsUrl {
         _args: &ArgList<Process>,
         _error: Option<NonZeroU8>,
     ) -> Result<Self::Returns<'a>, ProcessError> {
-        Ok("7fed185f-0864-319f-875b-a3d5458e30ac")
+        Ok("6ba7b811-9dad-11d1-80b4-00c04fd430c8")
     }
 }
 

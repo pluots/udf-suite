@@ -6,7 +6,12 @@
 
 ### Added
 
+- Added support for v6 and v7 UUIDs
+
 ### Changed
+
+- Correct `uuid_ns_url` output
+- (workflow) correct integration testing workflow
 
 
 ## [0.1.2] - 2022-12-20

@@ -9,22 +9,26 @@ mimic Postgres' [uuid-osp] library.
 
 There are four common UUID types:
 
-* V1: MAC address + timestamp + small random portion. The MAC address and
-  timestamp can be determined from a V1 UUID
-* V3: a MD5 hash of a "namespace" UUID and "name" data. This is fully
+* v1: MAC address + timestamp + small random portion. The MAC address and
+  timestamp can be determined from a v1 UUID
+* v3: a MD5 hash of a "namespace" UUID and "name" data. This is fully
   deterministic, there is no random component.
-* V4: fully random UUID
-* V5: same as V3, uses SHA1 instead
+* v4: a fully random UUID
+* v5: same as v3, uses SHA1 instead
 
-And three newer UUID types (still nearing formal adoption, but already widely used):
+And three newer UUID types (still nearing formal adoption, but already widely
+used) that sort better:
 
-* V6: like V1 but rearranged to sort properly (timestamp first) and specifying
-  that the node address may be random
-* V7: a UUID that starts with the current unix timestamp and
-* V8: a UUID containing any data but
+* v6: like v1 but rearranged to sort properly (timestamp first and node address
+  last). The node address may be random. (The UUID specifications recommended
+  that v7 UUIDs be preferred over v6 if there is no need for compatibility with
+  v1 UUIDs)
+* v7: a UUID that starts with the current unix timestamp, the rest contains
+  random data
+* v8: a UUID entirely of desired data, with the exception of a version marking
 
-This library is able to generate v1 and v4 UUIDs. Support for v3 and v5 will be
-added in the future.
+This library is able to generate v1, v4, v6, and v7 UUIDs. Support for v3 and v5
+will be added in the future.
 
 **Note** if for whatever reason the U6-U8 specification changes before it is
 finalized (unlikely), these implementations will also change.
@@ -33,27 +37,27 @@ finalized (unlikely), these implementations will also change.
 
 The available functions that return a variable UUID are:
 
-* `uuid_generate_v1()`: Generate a V1 UUID using this node's MAC address
-* `uuid_generate_v1mc()`: Generate a V1 UUID using a random multicast MAC address
-<!-- * `uuid_generate_v1arg(some_mac)`: Generate a V1 UUID using a specified MAC
+* `uuid_generate_v1()`: Generate a v1 UUID using this node's MAC address
+* `uuid_generate_v1mc()`: Generate a v1 UUID using a random multicast MAC address
+<!-- * `uuid_generate_v1arg(some_mac)`: Generate a v1 UUID using a specified MAC
   address
-* `uuid_generate_v3(namespace, name)`: Generate a V3 UUID from a `namespace`
+* `uuid_generate_v3(namespace, name)`: Generate a v3 UUID from a `namespace`
   UUID and `name` data. For example, `uuid_generate_v3(uuid_ns_url(), 'some
   text')` -->
-* `uuid_generate_v4()`: Generate a random V4 UUID
-<!-- * `uuid_generate_v5(namespace, name)`: Generate a V5 UUID. This is similar to V3
+* `uuid_generate_v4()`: Generate a random v4 UUID
+<!-- * `uuid_generate_v5(namespace, name)`: Generate a v5 UUID. This is similar to v3
   but uses SHA1 instead of MD5. -->
-* `uuid_generate_v6()` / `uuid_generate_v6(node_address)` Generate a V6 UUID. If
+* `uuid_generate_v6()` / `uuid_generate_v6(node_address)` Generate a v6 UUID. If
   a node address is specified it will be used, otherwise it will be randomized.
-* `uuid_generate_v7()` Generate a V7 UUID (starts with a UNIX timestamp, the
-  rest of the data is random)
+* `uuid_generate_v7()` Generate a v7 UUID (starts with a UNIX timestamp, the
+  rest of the data is random).
 
 There are also some functions that return constant values:
 
 * `uuid_nil()`: Return the `nil` UUID (all zeroes)
 * `uuid_ns_max()`: Return the `max` UUID (all ones)
-* `uuid_ns_dns()`: Return the DNS namespace UUID (used for V3/V5 UUIDs)
-* `uuid_ns_url()`: Return the URL namespace UUID (used for V3/V5 UUIDs)
+* `uuid_ns_dns()`: Return the DNS namespace UUID (used for v3/v5 UUIDs)
+* `uuid_ns_url()`: Return the URL namespace UUID (used for v3/v5 UUIDs)
 * `uuid_ns_oid()`: Return the ISO OID namespace UUID
 * `uuid_ns_x500()`: Return the X.500 namespace UUID
 
