@@ -145,7 +145,7 @@ jobs:
           override: true
       - name: Run integration testing
         # Run only integration tests with `--test '*'`
-        run: cargo test -p test-integration --test '*'
+        run: cargo test -p test-integration --test '*' --features backend
       - name: Print docker logs
         if: always()
         run: |
