@@ -4,6 +4,13 @@
 
 ## [Unreleased] - ReleaseDate
 
+### Added
+
+### Changed
+
+
+## [0.1.2] - 2022-12-20
+
 ### Changed
 
 - Removed unneeded debug statement from uuid generate
@@ -26,6 +33,7 @@
 
 <!-- next-url -->
 
-[Unreleased]: https://github.com/pluots/udf-suite/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/pluots/udf-suite/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/pluots/udf-suite/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/pluots/udf-suite/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/pluots/udf-suite/releases/tag/v0.1.0
