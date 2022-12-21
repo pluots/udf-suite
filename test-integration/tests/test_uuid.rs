@@ -1,15 +1,15 @@
 #![cfg(feature = "backend")]
 
-// mod backend;
+mod backend;
 
 // use backend::get_db_connection;
+use backend::get_db_connection;
 use diesel::dsl::sql;
 use diesel::prelude::*;
-use diesel::sql_types::Text;
-use test_integration::get_db_connection;
+use diesel::sql_types::{Integer, Text};
 use uuid::Uuid;
 
-const SETUP: [&str; 3] = [
+const SETUP: [&str; 11] = [
     "create or replace function uuid_generate_v1
         returns string
         soname 'libudf_uuid.so'",
@@ -128,9 +128,9 @@ fn test_generate_v1() {
         .get_result(conn)
         .unwrap();
 
-    let uuid = Uuid::try_parse(res.0).unwrap();
+    let uuid = Uuid::try_parse(&res.0).unwrap();
 
-    assert_eq!(uuid.get_version_number(), 1);
+    assert_eq!(uuid.get_version_num(), 1);
 }
 
 #[test]
@@ -141,9 +141,9 @@ fn test_generate_v1mc() {
         .get_result(conn)
         .unwrap();
 
-    let uuid = Uuid::try_parse(res.0).unwrap();
+    let uuid = Uuid::try_parse(&res.0).unwrap();
 
-    assert_eq!(uuid.get_version_number(), 1);
+    assert_eq!(uuid.get_version_num(), 1);
 }
 
 #[test]
@@ -154,9 +154,9 @@ fn test_generate_v4() {
         .get_result(conn)
         .unwrap();
 
-    let uuid = Uuid::try_parse(res.0).unwrap();
+    let uuid = Uuid::try_parse(&res.0).unwrap();
 
-    assert_eq!(uuid.get_version_number(), 4);
+    assert_eq!(uuid.get_version_num(), 4);
 }
 
 #[test]
@@ -167,19 +167,19 @@ fn test_generate_v6() {
         .get_result(conn)
         .unwrap();
 
-    let uuid = Uuid::try_parse(res.0).unwrap();
+    let uuid = Uuid::try_parse(&res.0).unwrap();
 
-    assert_eq!(uuid.get_version_number(), 6);
+    assert_eq!(uuid.get_version_num(), 6);
 
     let node_id = b"abcdef";
     let res: (String,) = sql::<(Text,)>("select uuid_generate_v6()")
         .get_result(conn)
         .unwrap();
 
-    let uuid = Uuid::try_parse(res.0).unwrap();
+    let uuid = Uuid::try_parse(res.0.as_str()).unwrap();
 
-    assert_eq!(uuid.get_version_number(), 6);
-    asset!(uuid.as_bytes().ends_with(node_id));
+    assert_eq!(uuid.get_version_num(), 6);
+    assert!(uuid.as_bytes().ends_with(node_id));
 }
 
 #[test]
@@ -190,18 +190,18 @@ fn test_generate_v7() {
         .get_result(conn)
         .unwrap();
 
-    let uuid = Uuid::try_parse(res.0).unwrap();
+    let uuid = Uuid::try_parse(res.0.as_str()).unwrap();
 
-    assert_eq!(uuid.get_version_number(), 7);
+    assert_eq!(uuid.get_version_num(), 7);
 }
 
 #[test]
 fn test_valid() {
     let conn = &mut get_db_connection(&SETUP);
 
-    let res: (i64,) = sql::<(Text,)>("select uuid_is_valid(uuid_generate_v4())")
+    let res: (i32,) = sql::<(Integer,)>("select uuid_is_valid(uuid_generate_v4())")
         .get_result(conn)
         .unwrap();
 
-    assert_eq!(res, 1);
+    assert_eq!(res.0, 1);
 }

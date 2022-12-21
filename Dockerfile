@@ -6,7 +6,7 @@
 # # Run image
 # docker run --rm -e MARIADB_ROOT_PASSWORD=example --name mdb-udf-suite-c mdb-udf-suite
 # # Open a shell
-# docker exec --it mdb-udf-suite-c mysql -pexample
+# docker exec -it mdb-udf-suite-c mysql -pexample
 # ```
 
 FROM rust:latest AS build

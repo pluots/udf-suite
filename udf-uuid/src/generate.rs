@@ -145,10 +145,10 @@ impl BasicUdf for UuidGenerateV6 {
                 return Err(ProcessError);
             };
 
-            Uuid::now_v1(node_id)
+            Uuid::now_v6(node_id)
         } else {
             let rand_node: [u8; 6] = rand::random();
-            Uuid::now_v1(&rand_node)
+            Uuid::now_v6(&rand_node)
         };
 
         uuid.hyphenated().encode_lower(&mut self.0);
