@@ -54,7 +54,7 @@ MariaDB [db]> select jsonify(uuid() as uuid, qty as quantity, cost) from t1 limi
 ```
 
 
-## Lipsum
+### Lipsum
 
 Uses the [lipsum crate] to generate lipsum strings with a specified word count.
 
@@ -98,7 +98,7 @@ issue if you encounter any errors.
 [releases]: https://github.com/pluots/udf-suite/releases
 
 
-## Building from Source
+### Building from Source
 
 To build the binaries yourself, you can clone this repository and run:
 
