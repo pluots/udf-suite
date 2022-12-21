@@ -1,0 +1,3 @@
+# Required for v7 UUIDs
+[build]
+rustflags = ["--cfg", "uuid_unstable"]

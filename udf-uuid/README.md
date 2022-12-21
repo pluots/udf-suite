@@ -10,14 +10,24 @@ mimic Postgres' [uuid-osp] library.
 There are four common UUID types:
 
 * V1: MAC address + timestamp + small random portion. The MAC address and
-  timestamp can be determined from a UUID
+  timestamp can be determined from a V1 UUID
 * V3: a MD5 hash of a "namespace" UUID and "name" data. This is fully
   deterministic, there is no random component.
 * V4: fully random UUID
 * V5: same as V3, uses SHA1 instead
 
+And three newer UUID types (still nearing formal adoption, but already widely used):
+
+* V6: like V1 but rearranged to sort properly (timestamp first) and specifying
+  that the node address may be random
+* V7: a UUID that starts with the current unix timestamp and
+* V8: a UUID containing any data but
+
 This library is able to generate v1 and v4 UUIDs. Support for v3 and v5 will be
 added in the future.
+
+**Note** if for whatever reason the U6-U8 specification changes before it is
+finalized (unlikely), these implementations will also change.
 
 ## Available Functions
 
@@ -33,10 +43,15 @@ The available functions that return a variable UUID are:
 * `uuid_generate_v4()`: Generate a random V4 UUID
 <!-- * `uuid_generate_v5(namespace, name)`: Generate a V5 UUID. This is similar to V3
   but uses SHA1 instead of MD5. -->
+* `uuid_generate_v6()` / `uuid_generate_v6(node_address)` Generate a V6 UUID. If
+  a node address is specified it will be used, otherwise it will be randomized.
+* `uuid_generate_v7()` Generate a V7 UUID (starts with a UNIX timestamp, the
+  rest of the data is random)
 
 There are also some functions that return constant values:
 
 * `uuid_nil()`: Return the `nil` UUID (all zeroes)
+* `uuid_ns_max()`: Return the `max` UUID (all ones)
 * `uuid_ns_dns()`: Return the DNS namespace UUID (used for V3/V5 UUIDs)
 * `uuid_ns_url()`: Return the URL namespace UUID (used for V3/V5 UUIDs)
 * `uuid_ns_oid()`: Return the ISO OID namespace UUID
@@ -54,7 +69,10 @@ Load the functions:
 CREATE FUNCTION uuid_generate_v1 RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_generate_v1mc RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_generate_v4 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_generate_v6 RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_generate_v7 RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_nil RETURNS string SONAME 'libudf_uuid.so';
+CREATE FUNCTION uuid_max RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_dns RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_url RETURNS string SONAME 'libudf_uuid.so';
 CREATE FUNCTION uuid_ns_oid RETURNS string SONAME 'libudf_uuid.so';
@@ -68,7 +86,11 @@ Usage is as follows:
 SELECT uuid_generate_v1();
 SELECT uuid_generate_v1mc();
 SELECT uuid_generate_v4();
+SELECT uuid_generate_v6();
+SELECT uuid_generate_v6('123abc');
+SELECT uuid_generate_v7();
 SELECT uuid_nil();
+SELECT uuid_max();
 SELECT uuid_ns_dns();
 SELECT uuid_ns_url();
 SELECT uuid_ns_oid();

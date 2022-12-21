@@ -10,6 +10,9 @@ on:
 # on:
 #   pull_request:
 
+env:
+  RUSTFLAGS: "-D warnings --cfg uuid_unstable"
+
 jobs:
   build_release:
     name: "Build ${{ matrix.build }} binaries (cargo build)"

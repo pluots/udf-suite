@@ -9,6 +9,6 @@ crate-type = ["cdylib"]
 
 [dependencies]
 udf = { version = "0.5", features = ["mock"] }
-uuid = { version = "1.2.1", features = ["v1", "v3", "v4", "v5", "fast-rng"] }
+uuid = { version = "1.2.2", features = ["v1", "v3", "v4", "v5", "v6", "v7", "fast-rng"] }
 mac_address = "1.1.4"
 rand = "0.8.5"
