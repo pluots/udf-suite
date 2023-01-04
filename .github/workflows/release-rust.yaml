@@ -100,7 +100,7 @@ jobs:
           # Remove the "unreleased" section from our changelog
           perl -0777 -i -pe "s/(<\!-- next-header -->.*## \[Unreleased\].*?\n)(?=## |<\!--)//gms" CHANGELOG.md
 
-          cp {README.md,LICENSE,CHANGELOG.md} "$staging/"
+          cp {README.md,LICENSE*,CHANGELOG.md} "$staging/"
 
           # Build RNOTES.md, which we will use for our Github release (not shipped in zip)
           # Select the release notes from our latest version only
