@@ -11,9 +11,7 @@
 
 ## [0.1.4] - 2023-01-03
 
-### Added
-
-### Changed
+Changed licensing from 'Apache-2.0' to 'Apache-2.0 OR GPL-2.0-or-later'
 
 
 ## [0.1.3] - 2022-12-21
